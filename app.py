@@ -21,7 +21,6 @@ def initialize_session_state():
 
     if "chatbot_manager" not in st.session_state:
         st.session_state.chatbot_manager = ChatbotManager()
-        st.session_state.chatbot_manager.initialize_conversation()
 
     if "conversation_active" not in st.session_state:
         st.session_state.conversation_active = True

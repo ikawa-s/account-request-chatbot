@@ -1,17 +1,13 @@
 """
 LangChain セットアップ
-Gemini API、メモリ管理、会話チェーンの初期化
+Gemini APIの初期化と会話状態の管理
 """
 
 import os
 import re
 from typing import Dict, Any, Optional
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.memory import ConversationBufferMemory
-from langchain.chains import ConversationChain
-from langchain.prompts import PromptTemplate
 
-from src.prompts import SYSTEM_PROMPT
 from src.models import ConversationState
 
 
@@ -20,8 +16,6 @@ class ChatbotManager:
 
     def __init__(self):
         self.llm = None
-        self.memory = None
-        self.conversation = None
         self.state = ConversationState()
         self.initialize_llm()
 
@@ -38,36 +32,9 @@ class ChatbotManager:
             convert_system_message_to_human=True
         )
 
-    def initialize_conversation(self):
-        """会話チェーンを初期化"""
-        self.memory = ConversationBufferMemory(
-            return_messages=True,
-            memory_key="history"
-        )
-
-        # カスタムプロンプトテンプレート
-        prompt = PromptTemplate(
-            input_variables=["history", "input"],
-            template=f"""{SYSTEM_PROMPT}
-
-会話履歴:
-{{history}}
-
-ユーザー: {{input}}
-アシスタント:"""
-        )
-
-        self.conversation = ConversationChain(
-            llm=self.llm,
-            memory=self.memory,
-            prompt=prompt,
-            verbose=False
-        )
-
     def reset_conversation(self):
         """会話をリセット"""
         self.state = ConversationState()
-        self.initialize_conversation()
 
     def extract_information(self, user_input: str) -> Dict[str, Any]:
         """
