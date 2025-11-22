@@ -49,3 +49,8 @@ Thumbs.db
 
 # Streamlit
 .streamlit/
+
+# Claude Code
+.claude/
+settings.local.json
+*.local.json
